@@ -1,0 +1,250 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StudentSphere | Student Portal</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f4f6fc;color:#202b45}
+header{background:#202f5d;color:white;padding:18px 6%;display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:22px;font-weight:bold}
+.tag{font-size:11px;letter-spacing:1px;color:#ccd5ff}
+button{cursor:pointer;border:0;border-radius:8px;padding:11px 15px;font-weight:bold}
+.primary{background:#5068e8;color:white;width:100%;margin-top:8px}
+.secondary{background:#e9edff;color:#4055c7;margin:3px}
+.danger{background:#ffebed;color:#bd3044;margin:3px}
+input,select{width:100%;padding:12px;border:1px solid #dce1ed;border-radius:8px;margin:6px 0 14px;background:white}
+label{font-size:12px;font-weight:bold}
+h1,h2,h3{margin-top:0}
+.muted{color:#7d879b;font-size:13px;line-height:1.6}
+.container{max-width:1100px;margin:30px auto;padding:0 18px}
+.card{background:white;border:1px solid #e5e9f2;border-radius:15px;padding:22px;margin-bottom:18px;box-shadow:0 5px 22px #18264c08}
+.auth{max-width:430px;margin:45px auto}
+.tabs{display:flex;gap:8px;margin:20px 0}
+.tabs button{flex:1;background:#eef0f8;color:#56617a}
+.tabs button.active{background:#5068e8;color:white}
+.hidden{display:none!important}
+.banner{background:linear-gradient(120deg,#354aaf,#7182f4);color:white;padding:24px;border-radius:14px;margin-bottom:18px}
+.banner p{color:#e2e7ff}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:16px 0}
+.stat{background:white;border:1px solid #e5e9f2;border-radius:12px;padding:17px}
+.stat span{font-size:12px;color:#7d879b}
+.stat strong{display:block;font-size:25px;margin-top:10px;overflow-wrap:anywhere}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.row{display:flex;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid #edf0f6;font-size:13px}
+.row span{color:#7d879b}
+.row strong{text-align:right;overflow-wrap:anywhere}
+nav{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:18px}
+nav button{background:white;border:1px solid #e3e7f1;color:#4e5d7c}
+nav button.active{background:#5068e8;color:white}
+table{border-collapse:collapse;width:100%;min-width:570px}
+th,td{text-align:left;padding:12px;border-bottom:1px solid #edf0f6;font-size:12px}
+th{background:#f7f8fc;color:#68758e}
+.table-wrap{overflow:auto}
+small{color:#7d879b;line-height:1.8}
+.notice{font-size:12px;color:#c04452;min-height:17px}
+footer{text-align:center;color:#929bb0;font-size:11px;padding:25px}
+@media(max-width:650px){.stats{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}header{padding:16px}.tag{display:none}.container{margin:18px auto;padding:0 12px}.card{padding:17px}.auth{margin:22px auto}.banner{padding:19px}.stat{padding:13px}.stat strong{font-size:22px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">🎓 StudentSphere</div>
+  <div class="tag">STUDENT INFORMATION PORTAL</div>
+</header>
+
+<main id="auth" class="container">
+<section class="card auth">
+  <h2 id="authTitle">Welcome Back</h2>
+  <p class="muted" id="authDesc">Sign in to access your student portal.</p>
+  <div class="tabs">
+    <button id="loginTab" class="active" onclick="setMode('login')">Sign In</button>
+    <button id="signupTab" onclick="setMode('signup')">Sign Up</button>
+  </div>
+  <form id="authForm">
+    <div id="nameBox" class="hidden">
+      <label>Full Name</label><input id="name" placeholder="Enter full name">
+    </div>
+    <label id="identityLabel">Student ID or Email</label>
+    <input id="identity" required placeholder="Enter Student ID or email">
+    <label>Password</label><input id="password" type="password" required minlength="4" placeholder="Enter password">
+    <div id="signupFields" class="hidden">
+      <label>Course</label>
+      <select id="course">
+        <option>B.Tech Information Technology</option>
+        <option>B.Sc Computer Science</option>
+        <option>Bachelor of Computer Applications</option>
+        <option>B.Com</option><option>BBA</option>
+      </select>
+      <label>Academic Year</label>
+      <select id="year">
+        <option>First Year</option><option>Second Year</option>
+        <option>Third Year</option><option>Fourth Year</option>
+      </select>
+    </div>
+    <button class="primary" id="submitBtn">Sign In →</button>
+    <p class="notice" id="message"></p>
+  </form>
+  <hr style="border:0;border-top:1px solid #edf0f6;margin:20px 0">
+  <h3>Try the Demo</h3>
+  <p class="muted">Explore using a preloaded account.</p>
+  <button class="secondary" onclick="demo('student')">Student Demo</button>
+  <button class="secondary" onclick="demo('admin')">Admin Demo</button>
+  <p><small>Student: STU20260001 / student123<br>Admin: ADMIN001 / admin123</small></p>
+</section>
+</main>
+
+<main id="portal" class="container hidden">
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+    <div><h2 id="pageHeading">Overview</h2><p class="muted" id="userLabel"></p></div>
+    <button class="secondary" onclick="logout()">Sign Out ↗</button>
+  </div>
+  <nav id="nav">
+    <button class="active" onclick="showPage('overview',this)">Overview</button>
+    <button onclick="showPage('profile',this)">Personal Profile</button>
+    <button onclick="showPage('academic',this)">Academic Details</button>
+    <button onclick="showPage('attendance',this)">Attendance</button>
+    <button id="adminNav" class="hidden" onclick="showPage('manage',this)">Manage Students</button>
+  </nav>
+  <div id="content"></div>
+</main>
+<footer>StudentSphere · Student Information Management System · Demo Project</footer>
+
+<script>
+const KEY="studentsphere_records_v1";
+let mode="login", current=null, page="overview";
+
+function initialData(){
+ if(localStorage.getItem(KEY))return;
+ localStorage.setItem(KEY,JSON.stringify([
+  {id:"ADMIN001",name:"Portal Administrator",email:"admin@demo.com",password:"admin123",role:"admin"},
+  {id:"STU20260001",name:"Aanya Sharma",email:"aanya@example.com",password:"student123",role:"student",course:"B.Tech Information Technology",year:"Second Year",className:"IT-2A",dob:"2006-03-14",age:20,parents:"Rajesh Sharma and Neeta Sharma",phone:"+91 90000 10001",address:"Mumbai, Maharashtra",bloodGroup:"O+",medical:"No medical information provided",attendance:92,marks:86,subjects:[["Data Structures",88],["Database Management",91],["Computer Networks",82],["Mathematics",83]]},
+  {id:"STU20260002",name:"Arjun Mehta",email:"arjun@example.com",password:"student123",role:"student",course:"B.Sc Computer Science",year:"First Year",className:"CS-1B",dob:"2007-08-21",age:19,parents:"Kunal Mehta and Priya Mehta",phone:"+91 90000 10002",address:"Thane, Maharashtra",bloodGroup:"B+",medical:"No medical information provided",attendance:84,marks:78,subjects:[["Programming Fundamentals",82],["Mathematics",76],["Digital Systems",80]]}
+ ]));
+}
+function users(){return JSON.parse(localStorage.getItem(KEY)||"[]")}
+function save(list){localStorage.setItem(KEY,JSON.stringify(list))}
+function msg(text){document.getElementById("message").textContent=text}
+function setMode(m){
+ mode=m;
+ loginTab.classList.toggle("active",m==="login");
+ signupTab.classList.toggle("active",m==="signup");
+ nameBox.classList.toggle("hidden",m!=="signup");
+ signupFields.classList.toggle("hidden",m!=="signup");
+ authTitle.textContent=m==="login"?"Welcome Back":"Create Your Account";
+ authDesc.textContent=m==="login"?"Sign in to access your student portal.":"Register to receive your permanent Student ID.";
+ submitBtn.textContent=m==="login"?"Sign In →":"Create Account →";
+ identityLabel.textContent=m==="login"?"Student ID or Email":"Email Address";
+ identity.placeholder=m==="login"?"Enter Student ID or email":"Enter your email";
+ password.autocomplete=m==="login"?"current-password":"new-password";
+ msg("");
+}
+function newId(list){
+ const prefix="STU"+new Date().getFullYear();
+ let max=0;
+ list.forEach(u=>{if(u.id.startsWith(prefix))max=Math.max(max,parseInt(u.id.slice(prefix.length))||0)});
+ return prefix+String(max+1).padStart(4,"0");
+}
+authForm.addEventListener("submit",function(e){
+ e.preventDefault();
+ const list=users(), ident=identity.value.trim().toLowerCase(), pass=password.value;
+ if(mode==="signup"){
+  const n=name.value.trim();
+  if(!n){msg("Please enter your full name.");return}
+  if(!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(ident)){msg("Enter a valid email address.");return}
+  if(list.some(u=>u.email.toLowerCase()===ident)){msg("This email is already registered.");return}
+  const u={id:newId(list),name:n,email:ident,password:pass,role:"student",course:course.value,year:year.value,className:"Not assigned",dob:"",age:"",parents:"",phone:"",address:"",bloodGroup:"",medical:"Not provided",attendance:0,marks:0,subjects:[]};
+  list.push(u);save(list);alert("Account created! Your permanent Student ID is "+u.id);openPortal(u);return;
+ }
+ const u=list.find(x=>x.id.toLowerCase()===ident||x.email.toLowerCase()===ident);
+ if(!u||u.password!==pass){msg("Invalid Student ID/email or password.");return}
+ openPortal(u);
+});
+function demo(role){
+ const u=users().find(x=>x.id===(role==="admin"?"ADMIN001":"STU20260001"));
+ openPortal(u);
+}
+function openPortal(u){
+ current=u;auth.classList.add("hidden");portal.classList.remove("hidden");
+ userLabel.textContent=u.name+" · "+(u.role==="admin"?"Administrator":u.id);
+ adminNav.classList.toggle("hidden",u.role!=="admin");
+ showPage("overview",nav.querySelector("button"));
+}
+function logout(){current=null;portal.classList.add("hidden");auth.classList.remove("hidden");authForm.reset();setMode("login")}
+function esc(v){return String(v??"Not provided").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function pair(k,v){return `<div class="row"><span>${k}</span><strong>${esc(v||"Not provided")}</strong></div>`}
+function shortCourse(c){return (c||"Not assigned").replace("B.Tech Information Technology","B.Tech IT").replace("B.Sc Computer Science","B.Sc CS").replace("Bachelor of Computer Applications","BCA")}
+function showPage(p,btn){
+ if(!current)return;
+ if(p==="manage"&&current.role!=="admin")p="overview";
+ page=p;
+ document.querySelectorAll("#nav button").forEach(b=>b.classList.remove("active"));
+ if(btn)btn.classList.add("active");
+ const titles={overview:"Overview",profile:"Personal Profile",academic:"Academic Details",attendance:"Attendance",manage:"Manage Students"};
+ pageHeading.textContent=titles[p];
+ if(p==="overview")overview();
+ if(p==="profile")profile();
+ if(p==="academic")academic();
+ if(p==="attendance")attendancePage();
+ if(p==="manage")manage();
+}
+function overview(){
+ if(current.role==="admin"){
+  const ss=users().filter(u=>u.role==="student");
+  content.innerHTML=`<div class="banner"><h2>Welcome back, Administrator!</h2><p>Manage student accounts and academic records.</p></div>
+  <div class="stats"><div class="stat"><span>Registered Students</span><strong>${ss.length}</strong></div><div class="stat"><span>Courses</span><strong>${new Set(ss.map(s=>s.course)).size}</strong></div><div class="stat"><span>Average Marks</span><strong>${ss.length?Math.round(ss.reduce((a,s)=>a+(+s.marks||0),0)/ss.length):0}%</strong></div><div class="stat"><span>Portal Status</span><strong>Active</strong></div></div>
+  <section class="card"><h3>Administrator Tools</h3><p class="muted">Open Manage Students to search, inspect, edit or delete student records. Students can register from the sign-up screen.</p><button class="primary" onclick="showPage('manage',adminNav)">Manage Student Records →</button></section>`;
+  return;
+ }
+ const u=current,a=+u.attendance||0,m=+u.marks||0;
+ content.innerHTML=`<div class="banner"><h2>Welcome back, ${esc(u.name.split(" ")[0])}!</h2><p>Your academic journey, organised in one place.</p><p><b>Permanent Student ID:</b> ${esc(u.id)}</p></div>
+ <div class="stats"><div class="stat"><span>Attendance</span><strong>${a}%</strong></div><div class="stat"><span>Average Marks</span><strong>${m}%</strong></div><div class="stat"><span>Academic Year</span><strong style="font-size:17px">${esc(u.year)}</strong></div><div class="stat"><span>Course</span><strong style="font-size:16px">${esc(shortCourse(u.course))}</strong></div></div>
+ <div class="grid"><section class="card"><h3>Subject Performance</h3>${(u.subjects||[]).length?u.subjects.map(s=>`<div class="row"><span>${esc(s[0])}</span><strong>${s[1]}%</strong></div><div style="background:#e9edf8;border-radius:8px;height:7px;margin:8px 0 15px"><div style="background:#5068e8;width:${Math.min(100,+s[1]||0)}%;height:7px;border-radius:8px"></div></div>`).join(""):'<p class="muted">No marks added yet.</p>'}</section>
+ <section class="card"><h3>Student Summary</h3>${pair("Student ID",u.id)}${pair("Class",u.className)}${pair("Course",u.course)}${pair("Attendance status",a>=75?"On track":"Needs attention")}</section></div>`;
+}
+function profile(){
+ if(current.role==="admin"){content.innerHTML=`<section class="card"><h3>Administrator Profile</h3>${pair("Account ID",current.id)}${pair("Email",current.email)}${pair("Role","Administrator")}</section>`;return}
+ const u=current;
+ content.innerHTML=`<div class="grid"><section class="card"><h3>Personal Information</h3>${pair("Full Name",u.name)}${pair("Permanent Student ID",u.id)}${pair("Date of Birth",u.dob)}${pair("Age",u.age?u.age+" years":"Not provided")}${pair("Email",u.email)}${pair("Phone",u.phone)}</section><section class="card"><h3>Family and Contact</h3>${pair("Parent / Guardian",u.parents)}${pair("Address",u.address)}${pair("Blood Group",u.bloodGroup)}${pair("Medical Information",u.medical)}</section></div><p class="muted">Demo data only. Do not enter real medical or sensitive personal information.</p>`;
+}
+function academic(){
+ if(current.role==="admin"){content.innerHTML='<section class="card"><h3>Academic Records</h3><p class="muted">Select Manage Students to inspect student records.</p></section>';return}
+ const u=current,ss=u.subjects||[];
+ content.innerHTML=`<section class="card"><h3>${esc(u.course)}</h3><p class="muted">${esc(u.year)} · Class ${esc(u.className)}</p><h3>Subject Results</h3><div class="table-wrap"><table><tr><th>Subject</th><th>Marks</th><th>Grade</th></tr>${ss.map(s=>`<tr><td>${esc(s[0])}</td><td>${s[1]}/100</td><td>${s[1]>=90?"A+":s[1]>=80?"A":s[1]>=70?"B":"C"}</td></tr>`).join("")}</table></div></section>`;
+}
+function attendancePage(){
+ if(current.role==="admin"){content.innerHTML='<section class="card"><h3>Attendance Overview</h3><p class="muted">Select Manage Students to review attendance records.</p></section>';return}
+ const u=current,a=+u.attendance||0;
+ content.innerHTML=`<div class="grid"><section class="card"><h3>Overall Attendance</h3><strong style="font-size:42px;color:#5068e8">${a}%</strong><p class="muted">${a>=75?"Above the 75% reference threshold.":"Below the 75% reference threshold."}</p><div style="height:9px;background:#e9edf8;border-radius:9px"><div style="height:9px;width:${Math.min(100,a)}%;background:#5068e8;border-radius:9px"></div></div></section><section class="card"><h3>Attendance Information</h3>${pair("Student ID",u.id)}${pair("Course",u.course)}${pair("Class",u.className)}${pair("Status",a>=75?"On track":"Needs attention")}</section></div><p class="muted">Attendance is sample data for demonstration. A production system should calculate it from actual class records.</p>`;
+}
+function manage(){
+ const ss=users().filter(u=>u.role==="student");
+ content.innerHTML=`<div class="banner"><h2>Student Records</h2><p>Search, view, edit or delete demo student records.</p><b>Total Students: ${ss.length}</b></div><section class="card"><input id="search" placeholder="Search by student name, ID, course or email..." oninput="drawTable()"><div id="table"></div></section>`;
+ drawTable();
+}
+function drawTable(){
+ const q=(document.getElementById("search")?.value||"").toLowerCase();
+ const ss=users().filter(u=>u.role==="student"&&[u.name,u.id,u.course,u.email].some(v=>(v||"").toLowerCase().includes(q)));
+ document.getElementById("table").innerHTML=ss.length?`<div class="table-wrap"><table><tr><th>Name</th><th>Student ID</th><th>Course</th><th>Attendance</th><th>Actions</th></tr>${ss.map(u=>`<tr><td>${esc(u.name)}<br><small>${esc(u.email)}</small></td><td>${esc(u.id)}</td><td>${esc(shortCourse(u.course))}</td><td>${+u.attendance||0}%</td><td><button class="secondary" onclick="viewStudent('${u.id}')">View</button><button class="secondary" onclick="editStudent('${u.id}')">Edit</button><button class="danger" onclick="deleteStudent('${u.id}')">Delete</button></td></tr>`).join("")}</table></div>`:'<p class="muted">No matching students found.</p>';
+}
+function viewStudent(id){
+ const u=users().find(x=>x.id===id);if(!u)return;
+ content.innerHTML=`<section class="card"><button class="secondary" onclick="manage()">← Back</button><h2>${esc(u.name)}</h2><div class="grid"><div><h3>Personal Details</h3>${pair("Student ID",u.id)}${pair("Email",u.email)}${pair("Date of Birth",u.dob)}${pair("Age",u.age)}${pair("Parent / Guardian",u.parents)}${pair("Phone",u.phone)}${pair("Address",u.address)}${pair("Blood Group",u.bloodGroup)}${pair("Medical Information",u.medical)}</div><div><h3>Academic Details</h3>${pair("Course",u.course)}${pair("Year",u.year)}${pair("Class",u.className)}${pair("Attendance",u.attendance+"%")}${pair("Marks",u.marks+"%")}</div></div></section>`;
+}
+function editStudent(id){
+ const u=users().find(x=>x.id===id);if(!u)return;
+ const fields=["name","email","course","year","className","dob","age","parents","phone","address","bloodGroup","medical","attendance","marks"];
+ content.innerHTML=`<section class="card"><button class="secondary" onclick="manage()">← Back</button><h3>Edit Student Record</h3><form id="editForm"><div class="grid">${fields.map(f=>`<div><label>${f==="className"?"Class":f.replace(/([A-Z])/g," $1").replace(/^./,c=>c.toUpperCase())}</label><input id="f-${f}" value="${esc(u[f]??"")}" ${["age","attendance","marks"].includes(f)?'type="number" min="0" max="100"':f==="dob"?'type="date"':""}></div>`).join("")}</div><button class="primary">Save Changes</button></form></section>`;
+ editForm.onsubmit=e=>{e.preventDefault();const list=users(),i=list.findIndex(x=>x.id===id);fields.forEach(f=>{let v=document.getElementById("f-"+f).value.trim();if(["age","attendance","marks"].includes(f))v=Number(v)||0;list[i][f]=v});if(list.some((x,j)=>j!==i&&x.email.toLowerCase()===list[i].email.toLowerCase())){alert("Email already in use.");return}save(list);alert("Student record updated.");manage()};
+}
+function deleteStudent(id){
+ if(!confirm("Delete student "+id+"?"))return;
+ save(users().filter(u=>u.id!==id));alert("Student deleted.");manage();
+}
+initialData();
+</script>
+</body>
+</html>
+  
