@@ -87,7 +87,6 @@ $("auth-form").addEventListener("submit",e=>{
     return;
   }
   
-  // LOGIN LOGIC
   const user=users.find(u=>u.id.toLowerCase()===identity||u.email.toLowerCase()===identity);
   if(!user||user.password!==password){
     setMessage("Invalid Student/Admin ID or Password.");
@@ -96,7 +95,6 @@ $("auth-form").addEventListener("submit",e=>{
   loginUser(user);
 });
 
-// Demo Buttons fill credentials instead of bypassing authentication
 document.querySelectorAll("[data-demo]").forEach(btn=>btn.addEventListener("click",()=>{
   switchMode("login");
   const role=btn.dataset.demo;
@@ -122,7 +120,6 @@ function loginUser(user){
   $("header-user-name").textContent=user.name;
   $("header-avatar").textContent=initials(user.name);
   
-  // Show Admin menu item only if logged in as admin
   document.querySelectorAll(".admin-only").forEach(el=>el.classList.toggle("hidden",user.role!=="admin"));
   renderSection("overview");
 }
@@ -220,25 +217,4 @@ function drawStudentTable(){
 
 function viewStudent(id){
  const u=getUsers().find(x=>x.id===id);if(!u)return;
- $("dashboard-content").innerHTML=`<button class="small-btn" id="back-manage">← Back to records</button><h2 class="section-title" style="margin-top:18px">${escapeHtml(u.name)}</h2><div class="details-grid"><section class="detail-card"><h3>Personal Information</h3>${pair("Student ID",u.id)}${pair("Email",u.email)}${pair("Date of birth",u.dob)}${pair("Age",u.age)}${pair("Parents / guardian",u.parents)}${pair("Phone",u.phone)}${pair("Address",u.address)}${pair("Blood group",u.bloodGroup)}${pair("Medical information",u.medical)}</section><section class="detail-card"><h3>Academic Information</h3>${pair("Course",u.course)}${pair("Year",u.year)}${pair("Class",u.className)}${pair("Attendance",u.attendance+"%")}${pair("Average marks",u.marks+"%")}<button class="primary-btn" id="edit-view-btn" style="margin-top:18px">Edit student <span>→</span></button></section></div>`;
- $("back-manage").addEventListener("click",()=>renderSection("manage"));$("edit-view-btn").addEventListener("click",()=>editStudent(id));
-}
-
-function editStudent(id){
- const u=getUsers().find(x=>x.id===id);if(!u)return;editingId=id;
- $("dashboard-content").innerHTML=`<section class="panel"><button class="small-btn" id="cancel-edit">← Back to records</button><h2 class="section-title" style="margin-top:17px">Edit Student Record</h2><form id="edit-form"><div class="form-grid">${editField("name","Full name",u.name)}${editField("email","Email address",u.email,"email")}${editField("course","Course",u.course)}${editField("year","Academic year",u.year)}${editField("className","Class",u.className)}${editField("dob","Date of birth",u.dob,"date")}${editField("age","Age",u.age,"number")}${editField("parents","Parent / guardian",u.parents)}${editField("phone","Phone number",u.phone)}${editField("address","Address",u.address)}${editField("bloodGroup","Blood group",u.bloodGroup)}${editField("attendance","Attendance (%)",u.attendance,"number")}${editField("marks","Average marks (%)",u.marks,"number")}${editField("medical","Medical information",u.medical)}</div><div class="form-actions"><button type="button" id="cancel-edit-2" class="secondary-btn">Cancel</button><button type="submit" class="primary-btn">Save Changes <span>✓</span></button></div><p class="muted" style="margin-top:12px">Demo only: use fictional information, not real medical data.</p></form></section>`;
- $("cancel-edit").addEventListener("click",()=>renderSection("manage"));$("cancel-edit-2").addEventListener("click",()=>renderSection("manage"));
- $("edit-form").addEventListener("submit",e=>{e.preventDefault();const users=getUsers(),idx=users.findIndex(x=>x.id===editingId);if(idx<0)return;const fields=["name","email","course","year","className","dob","age","parents","phone","address","bloodGroup","attendance","marks","medical"];for(const f of fields){const el=$( "edit-"+f );let val=el.value.trim();if(["age","attendance","marks"].includes(f))val=Number(val)||0;users[idx][f]=val}if(users.some((x,i)=>i!==idx&&x.email.toLowerCase()===users[idx].email.toLowerCase())){showToast("That email is already in use.");return}saveUsers(users);currentUser=users.find(x=>x.id===currentUser.id);showToast("Student record updated.");renderSection("manage")});
-}
-
-function editField(id,label,value,type="text"){return `<div class="field"><label for="edit-${id}">${label}</label><input id="edit-${id}" type="${type}" value="${escapeHtml(value??"")}" ${["age","attendance","marks"].includes(id)?'min="0" max="100"':''}></div>`}
-
-function deleteStudent(id){
- if(id===currentUser.id){showToast("You cannot delete the account currently in use.");return}
- if(!confirm("Delete student "+id+"? This cannot be undone in this demo."))return;
- saveUsers(getUsers().filter(u=>u.id!==id));showToast("Student record deleted.");renderSection("manage");
-}
-
-function showToast(text){const t=$("toast");t.textContent=text;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),3000)}
-
-seedDatabase();
+ $("dashboard-content").innerHTML=`<button class="small-btn" id="back-manage">← Back to records</button><h2 class="section-title" style="margin-top:18px">${escapeHtml(u.name)}</h2><div class="details-grid"><section class="detail-card"><h3>Personal Information</h3>${pair("Student ID",u.id)}${pair("Email",u.email)}${pair("Date of birth",u.dob)}${pair("Age",u.age)}${pair("Parents / guardian",u.parents)}${pair("Phone",u.phone)}${pair("Address",u.address)}${pair("Blood group",u.bloodGroup)}${pair("Medical information",u.medical)}</section><section class="detail-card"><h3>Academic Information</h3>${pair("Course",u.course)}$
